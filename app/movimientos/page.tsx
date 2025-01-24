@@ -1,0 +1,21 @@
+
+import NavBar from "@/components/navbar";
+import { dataPages } from "../data";
+import NavigationPath from "@/components/navigation.path";
+import { SectionNewMovement } from "@/components/section.movements";
+
+
+export default function Movimientos() {
+    return (
+      <> 
+        <NavBar pages={dataPages.pages} />  
+        <NavigationPath currentPage='Movimientos' />   
+        <section className="border border-black w-[80%] md:w-[85%] h-[80vh] ml-[64px] md:ml-[150px] mt-[80px] md:mt-[75px]">
+  
+            <SectionNewMovement />
+        </section>
+  
+      </>
+    );
+  }
+  
