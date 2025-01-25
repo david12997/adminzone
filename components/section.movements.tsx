@@ -1,20 +1,48 @@
 "use client"
 
-import { JSX, useState } from "react"
+import { JSX, useEffect, useState } from "react"
 import { IconFilter, IconSearch } from "./icons"
+import { NewRequests } from "@/helpers/request"
 
 
 export const SectionNewMovement   = ():JSX.Element => {
 
-    const [typeMovement, setTypeMovement] = useState<string>('entrada')
+    const [typeMovement, setTypeMovement] = useState<string>('entrada');
+    const [products, setProducts] = useState<any[]>([]);
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setTypeMovement(event.target.value.trim())
     }
+
+    const formatCurrency = (value: number): string => {
+        return new Intl.NumberFormat('es-CO', {
+          style: 'currency',
+          currency: 'COP',
+        }).format(value);
+      };
+
+
+    useEffect(() => {
+
+        NewRequests(['http://localhost:3000/api/products?limit=50&offset=0']).then((response) => {
+
+            setProducts(response[0].data)
+            console.log(response)
+        
+        }).catch((error) => {
+            console.log(error)
+
+        })
+
+       
+        
+    }
+    ,[])
+
     return <>
     
     <section className="w-[90%] md:w-[40%] bg-white p-4 rounded-md shadow-md h-[80vh]">
-            <div className="container-titles border border-orange-300 w-[95%] ml-[2%] h-[13%] ">
+            <div className="container-titlew-[95%] ml-[2%] h-[13%] ">
                 <div className="text-type relative flex items-center justify-center mt-4 cursor-pointer">
                     <p className="text absolute top-[-13px]  text-[13px] text-[#868686]">Tipo de movimiento</p>
                     <select
@@ -28,9 +56,9 @@ export const SectionNewMovement   = ():JSX.Element => {
                     </select>
                 </div>
             </div>
-            <div className="container-actions border border-red-300 w-[95%] ml-[2%] h-[17%] flex justify-between items-center">
+            <div className="container-actions  w-[95%] ml-[2%] h-[17%] flex justify-between items-center">
                 <div className="contianer-input relative  w-[85%] cursor-pointer">
-                    <div className="icon-search absolute left-[86%] top-[6px] ">
+                    <div className="icon-search absolute left-[76%] md:left-[85%] top-[6px] ">
                         <IconSearch />
                     </div>
                     <input className="input-reset w-[99%] h-[50px] bg-[#E7E7E7] p-4 rounded-md font-bold" type="text" placeholder="Buscar item" />
@@ -39,6 +67,28 @@ export const SectionNewMovement   = ():JSX.Element => {
                 <div className="container-filters cursor-pointer">
                     <IconFilter/>
                 </div>
+            </div>
+            <div className="container-products flex flex-wrap justify-between w-[95%] ml-[2%] h-[70%]  overflow-y-scroll">
+
+                {
+                    products.map((product) => {
+                        
+                        const media= JSON.parse(product.media) 
+
+                        return <div key={product.id} className="card-product min-w-[160px] max-w-[170px] h-[250px] bg-white border border-[#e7e7e7e7] shadow-md m-2 p-1 rounded-md">
+                            <div className="container-image w-[100%] h-[50%] ">
+                                <img className="w-full h-full object-contain" src={media.url} alt={product.name} />
+                            </div>
+                            <hr className="mt-2 mb-2"></hr>
+                            <div className="container-info w-[100%] h-[50%] p-2">
+                                <p className="text-[13px]  text-[#868686] w-[99%] truncate">{product.name}</p>
+                                <p className="text-[18px] font-bold text-[#000] w-[99%] truncate">{formatCurrency(product.ml_price)}</p>
+                            </div>
+                        </div>
+                    })
+                }
+              
+
             </div>
         </section>
     
