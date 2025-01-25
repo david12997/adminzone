@@ -24,14 +24,14 @@ export async function POST(req: Request, res: Response) {
         const token = authToken.split(' ')[1];
 
         // compare token with database
-        const [rows] = await DB.query('SELECT * FROM directus_users WHERE token = ?',[token]);
+        const [rows]: any[] = await DB.query('SELECT * FROM directus_users WHERE token = ?',[token]);
         if(rows.length === 0) return NextResponse.json({status:401,message:'unauthorized'});
 
         // get products
         const [products] = await DB.query('SELECT * FROM product LIMIT ? OFFSET ?',[parseInt(limit),parseInt(offset)]);
 
 
-        return NextResponse.json({status:200,message:products});
+        return NextResponse.json({status:200,data:products});
 
     }catch{
 

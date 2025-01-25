@@ -1,4 +1,4 @@
-export const NewRequests = async(urls:string[],data:string,password:string) =>{
+export const NewRequests = async(urls:string[]) =>{
 
     try{
 
@@ -12,12 +12,9 @@ export const NewRequests = async(urls:string[],data:string,password:string) =>{
                 cache: 'no-store',
                 headers:{
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer JGQPC3fuRgXCtpNjShZQGnzC`
                 },
-                body: JSON.stringify({
-                    data,
-                    password
-                })
+                body: JSON.stringify({limit:10,offset:0})
             })           
         
         });

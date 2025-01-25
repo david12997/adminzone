@@ -13,3 +13,20 @@ body{
 .input-reset {
   @apply border-none outline-none bg-none  shadow-none appearance-none;
 }
+
+/* scroll bar styles */
+
+*::-webkit-scrollbar {
+  width: 9px; 
+  height:9px;              /* width of the entire scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;        /* color of the tracking area */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #919191a1;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid transparent;  /* creates padding around scroll thumb */
+}
