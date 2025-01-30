@@ -67,14 +67,23 @@ const SectionItems = ():JSX.Element => {
                             
                             const media= JSON.parse(product.media) 
     
-                            return <div key={product.id} className="card-product min-w-[130px] max-w-[140px] h-[250px] bg-white border border-[#a8a8a8e7] shadow-md m-2 p-1 rounded-md">
-                                <div className="container-image w-[100%] h-[50%] ">
+                            return <div key={product.id} className="card-product min-w-[130px] max-w-[140px] h-[250px] bg-white border border-[#979797e7] shadow-md m-2 p-1 rounded-md">
+                                <div className="container-image w-[100%] h-[35%] ">
                                     <img className="w-full h-full object-contain" src={media.url} alt={product.name} />
                                 </div>
-                                <hr className="mt-2 mb-2"></hr>
-                                <div className="container-info w-[100%] h-[50%] p-2">
-                                    <p className="text-[13px]  text-[#868686] w-[99%] truncate">{product.name}</p>
-                                    <p className="text-[18px] font-bold text-[#000] w-[99%] truncate">{FormatCurrency(product.ml_price,'COP')}</p>
+                                <hr className="mt-1 mb-2"></hr>
+                                <div className="container-info w-[100%] h-[65%] p-2 ">
+                                    <p className="text-[13px]  text-[#868686] w-[99%] truncate  mb-4">{product.name}</p>
+                                    <hr className="mt-1 mb-2"></hr>
+                                    <p className="text-[13px]  text-[#868686] w-[99%] truncate ">Elegir Precio:</p>
+                                    <select className="text-[13px] font-bold text-[#000] w-[99%] truncate   input-reset">
+                                    
+                                        <option className="text-[13px] font-bold text-[#000] w-[99%] truncate ">ML: {FormatCurrency(product.ml_price,'COP')}</option>
+                                        <option className="text-[13px] font-bold text-[#000] w-[99%] truncate ">Unidad: {FormatCurrency(product.unit_price,'COP')}</option>
+                                        <option className="text-[13px] font-bold text-[#000] w-[99%] truncate ">Combo:{FormatCurrency(product.combo_price,'COP')}</option>
+                                        <option className="text-[13px] font-bold text-[#000] w-[99%] truncate ">Al Mayor: {FormatCurrency(product.mayor_price,'COP')}</option>
+                                    </select>
+                                    <button className="bg-[#4A0083] text-[#fff] font-bold text-[13px] w-[99%] h-[30px] rounded-md mt-2">Agregar</button>
                                 </div>
                             </div>
                         })
