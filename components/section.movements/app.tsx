@@ -5,10 +5,11 @@ import { JSX } from "react";
 import InputMovement from "./input.movement";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
+import { useAppSelector } from "@/store";
 
 const SectionAppMovement = ():JSX.Element => {
 
-    const fakeData = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+    const movementProducts = useAppSelector((state) => state.movement.products);
 
     useEffect(() => {
         const socket = io('ws://localhost:3001');
@@ -30,18 +31,24 @@ const SectionAppMovement = ():JSX.Element => {
             <div className="containerItems w-[95%] ml-[2%] h-[40%] bg-[#f3f3f3] overflow-y-scroll">
 
                 {
-                    fakeData.map((item, index) => {
+                    movementProducts.length > 0 &&  movementProducts.map((product, index) => {
+
+                        console.log(product)
+
+                        const total = parseInt(product.quantity_selected) * parseInt(product.price_selected)
+
+                        const media= JSON.parse(product.media)
 
                         return<div key={index} className="card-item w-[96%] ml-[2%] h-[56px] bg-white border border-[#979797] mt-2 mb-2 rounded-md flex">
                     
                         <div className="img w-[56px] h-[50px] ml-1 flex justify-center items-center">
-                            <img src="https://http2.mlstatic.com/D_601478-MCO69518016936_052023-O.webp" alt="box" className="h-[100%] object-contain rounded-md "/>
+                            <img src={media.url} alt={product.name}  className="h-[100%] object-contain rounded-md "/>
                         </div>
     
                         <div className="data w-[80%] h-[100%] ml-4">
                             
-                            <p className="name font-normal text-[13px] min-w-[260px] truncate text-[#5a5a5a]">Pipa de Vidrio con forrode goma</p>
-                            <p className="price font-bold">{FormatCurrency(25000,'COP')}</p>
+                            <p className="name font-normal text-[13px] min-w-[260px] truncate text-[#5a5a5a]">{product.name}</p>
+                            <p className="price font-bold">{FormatCurrency(total,'COP')}</p>
                         </div>
     
     
