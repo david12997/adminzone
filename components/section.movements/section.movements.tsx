@@ -11,6 +11,7 @@ export const SectionNewMovement   = ():JSX.Element => {
 
         <SectionItems/>
         <SectionAppMovement/>
+       
     
     
     </>
