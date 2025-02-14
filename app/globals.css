@@ -5,7 +5,7 @@
 body{
   width: 100vw;
   height: 100vh;
-  background: #E0E0E0;
+  background: #d4d4d4;
   overflow-y: hidden;
   overflow-x: hidden;
 }
@@ -29,4 +29,22 @@ body{
   background-color: #919191a1;    /* color of the scroll thumb */
   border-radius: 20px;       /* roundness of the scroll thumb */
   border: 3px solid transparent;  /* creates padding around scroll thumb */
+}
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes loading {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}
+
+.animate-loading {
+  animation: loading 1.5s ease-in-out infinite;
 }

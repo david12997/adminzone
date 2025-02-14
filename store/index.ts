@@ -7,11 +7,15 @@ import { createWrapper } from "next-redux-wrapper";
 
 import MovementSliceReducer from "./movement";
 import ItemSliceReducer from "./item";
+import OwnersSliceReducer from "./owner";
+import TransactionSliceReducer from "./transaction";
 
 const rootReducer = combineReducers({
 
     movement:MovementSliceReducer,
-    item:ItemSliceReducer
+    item:ItemSliceReducer,
+    owners:OwnersSliceReducer,
+    transaction:TransactionSliceReducer
 
 });
 
