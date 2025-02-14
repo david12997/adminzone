@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit'; 
 
-export interface productsTypes {
+export interface movementTypes {
     products: any[];
     total_movement: number | string;
     owner: string;
@@ -14,7 +14,7 @@ export interface productsTypes {
 }
 
 
-const initialState: productsTypes = {
+const initialState: movementTypes = {
     products: [],
     total_movement: 0,
     owner: '',
@@ -25,10 +25,10 @@ const initialState: productsTypes = {
 };
 
 const ProductSlice = createSlice({
-    name: 'products',
+    name: 'movements',
     initialState,
     reducers: {
-        setProducts(state, action: PayloadAction<string[]>) {
+        setProducts(state, action: PayloadAction<any[]>) {
             state.products = action.payload;
         },
         setTotalMovement(state, action: PayloadAction<number | string>) {

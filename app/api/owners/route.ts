@@ -8,19 +8,23 @@ export async function POST(req: Request) {
 
     try{
 
-        /**
-         * @description get products
-         * @param limit number
-         * @param offset number
-         * @authToken token from headers
-         * @returns products
-         */
 
-        // get limit and offset from query
+        /**
+         * @description get limit and offset from query string
+         * @example http://localhost:3000/api/owners?limit=10&offset=0
+         * 
+         * @limit  contain the number of items to show
+         * @offset contain the number of items to skip
+         */
         const limit = new URL(req.url).searchParams.get('limit'); 
         const offset = new URL(req.url).searchParams.get('offset');
 
-        // get token from headers
+        /**
+         * @description get token from headers
+         * @example Authorization: Bearer token
+         * 
+         * @authToken contain the token
+         */
         const authToken = req.headers.get('Authorization');
 
         //validation of limit and offset 
@@ -37,11 +41,11 @@ export async function POST(req: Request) {
         const [rows]: any[] = await DB.query('SELECT * FROM directus_users WHERE token = ?',[token]);
         if(rows.length === 0) return NextResponse.json({status:401,message:'unauthorized'});
 
-        // get products
-        const [products] = await DB.query('SELECT * FROM product LIMIT ? OFFSET ?',[parseInt(limit),parseInt(offset)]);
+        // get owners
+        const [owners] = await DB.query('SELECT * FROM owner LIMIT ? OFFSET ?',[parseInt(limit),parseInt(offset)]);
 
 
-        return NextResponse.json({status:200,data:products});
+        return NextResponse.json({status:200,data:owners});
 
     }catch{
 

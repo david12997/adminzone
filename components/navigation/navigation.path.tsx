@@ -1,11 +1,11 @@
+'use client'
+import { usePathname } from "next/navigation"
+import { IconArrowLeft } from "../icons"
 
-import { IconArrowLeft } from "./icons"
 
-type navigationProps = {
-    currentPage:string
-}
+const NavigationPath:React.FC = () => {
 
-const NavigationPath:React.FC<navigationProps> = (props) => {
+    const pathname = usePathname()
 
     return<>
 
@@ -13,7 +13,7 @@ const NavigationPath:React.FC<navigationProps> = (props) => {
             <div className="icon">
                 <IconArrowLeft />
             </div>
-            <p className="ml-2 md:ml-4 text-[14px] md:text-[15px]">  {props.currentPage}</p>
+            <p className="ml-2 md:ml-4 text-[14px] md:text-[15px]"> {pathname} </p>
         </section>
     </>
 }

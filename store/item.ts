@@ -17,7 +17,7 @@ const ItemSlice = createSlice({
     name: 'items',
     initialState,
     reducers: {
-        setItems(state, action: PayloadAction<string[]>) {
+        setItems(state, action: PayloadAction<any[]>) {
             state.items = action.payload;
         },
         setType(state, action: PayloadAction<string>) {

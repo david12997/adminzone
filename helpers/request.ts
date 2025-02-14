@@ -1,4 +1,4 @@
-export const NewRequests = async(urls:string[]) =>{
+export const NewRequests = async(urls:string[],method:string,body?:string[],auth?:string) =>{
 
     try{
 
@@ -8,14 +8,14 @@ export const NewRequests = async(urls:string[]) =>{
         urls.forEach((url:string, index:number)=>{
             
             promises[index] = fetch(url,{
-                method: 'POST',
+                method: method,
                 cache: 'no-store',
                 headers:{
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer JGQPC3fuRgXCtpNjShZQGnzC`
+                    'Authorization': auth || `Bearer JGQPC3fuRgXCtpNjShZQGnzC`
                 },
-                body: JSON.stringify({limit:10,offset:0})
-            })           
+                body: body ? body[index] || JSON.stringify({limit:10,offset:0}) : JSON.stringify({limit:10,offset:0})
+             })           
         
         });
 

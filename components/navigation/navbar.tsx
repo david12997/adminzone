@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { JSX } from "react"
 
 type NavBarProps = {
@@ -25,17 +26,17 @@ const NavBar:React.FC<NavBarProps> = (props) => {
                             {
                                 page.name === 'Movimientos'
                                 ?
-                                <div  className="flex flex-col items-center justify-center  border border-orange-300 w-[85%] h-[90px] ">
+                                <Link href={"/"+page.name.toLowerCase()} className="flex flex-col items-center justify-center    w-[85%] h-[90px] ">
                     
                                     {page.icon()}
-                                    <p className="hidden md:block text-[12px] text-[#4200E7] font-bold">{page.name}</p>
-                                </div>
+                                    <p className="hidden md:block text-[12px] text-[#4A0083] font-bold">{page.name}</p>
+                                </Link>
                                 :
-                                <div  className="flex flex-col items-center justify-center  border border-orange-300 w-[85%] h-[90px] ">
+                                <Link href={"/"+page.name.toLowerCase()}  className="flex flex-col items-center justify-center    w-[85%] h-[90px] ">
                     
                                     {page.icon()}
                                     <p className="hidden md:block text-[12px] text-[#9B9B9B] font-bold">{page.name}</p>
-                                </div>
+                                </Link>
                             }
                             
                         </div>

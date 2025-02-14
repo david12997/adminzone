@@ -1,134 +1,55 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import jsQR from 'jsqr';
-import { io } from "socket.io-client";
-
-const socket = io('ws://localhost:3001'); // Conexión global para evitar múltiples instancias
+import { FormatCurrency } from '@/helpers/format.currency';
+import useQrScanner from '@/hooks/use.qr.scanner';
 
 const ScannerQr = () => {
-  const [scannedProducts, setScannedProducts] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [isScannerVisible, setIsScannerVisible] = useState<boolean>(true);
-  const [scanFailures, setScanFailures] = useState<number>(0);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const beepSound = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    beepSound.current = new Audio('https://db-adminzone.aipus.shop/inverzone/assets/h2kq26r8w74004wg');
-
-    socket.on('connect', () => {
-      console.log('Conexión establecida con el servidor, ID:', socket.id);
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Desconectado del servidor');
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-  const startScanner = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
-    } catch (err) {
-      setError('No se pudo acceder a la cámara. Inténtalo de nuevo.');
-    }
-  };
-
-  useEffect(() => {
-    startScanner();
-
-    return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
-        tracks.forEach(track => track.stop());
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const scan = async () => {
-      if (isProcessing || !videoRef.current || !canvasRef.current) return;
-
-      setIsProcessing(true);
-
-      const canvas = canvasRef.current;
-      const video = videoRef.current;
-      const context = canvas.getContext('2d');
-
-      if (context) {
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-        if (code) {
-          setScannedProducts((prevProducts) => [...prevProducts, code.data]);
-          setError(null);
-          setScanFailures(0);
-
-          if (beepSound.current) {
-            beepSound.current.play().catch(err => console.error('Error reproduciendo el sonido:', err));
-          }
-
-          console.log('Enviando código escaneado:', code.data);
-          socket.emit('add_item', code.data); // Emitir evento
-        } else {
-          setScanFailures((prevFailures) => prevFailures + 1);
-        }
-      }
-
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 2000);
-    };
-
-    const interval = setInterval(scan, 1000);
-
-    if (scanFailures >= 3) {
-      clearInterval(interval);
-      setIsScannerVisible(false);
-    }
-
-    return () => clearInterval(interval);
-  }, [isProcessing, scanFailures]);
-
-  const handleRestart = () => {
-    setScanFailures(0);
-    setIsScannerVisible(true);
-    startScanner();
-  };
+  
+  const {isScannerActive, videoRef, canvasRef, error, scannedData, selectedPrice, handleRestart, handleAddItem, setSelectedPrice} = useQrScanner();
 
   return (
-    <div>
-      <h1>Escanear productos:</h1>
-      {isScannerVisible ? (
-        <>
-          <video ref={videoRef} style={{ width: '250px', height: '250px' }}></video>
-          <canvas ref={canvasRef} style={{ display: 'none' }} width="250" height="250"></canvas>
-        </>
+    <div className='w-full h-full border p-4 bg-white shadow-md rounded-md'>
+      <h1 className='w-full flex items-center justify-center font-bold mb-4 text-[16px] md:text-[20px]'>
+        Escanear Productos
+      </h1>
+      {isScannerActive ? (
+        <div className='flex items-center justify-center'>
+          <video
+            ref={videoRef}
+            className='border border-[#4A0083] rounded-md'
+            style={{ width: '250px', height: '250px' }}
+          />
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
+        </div>
       ) : (
-        <button onClick={handleRestart}>Reiniciar escáner</button>
+        <div className='flex items-center justify-center'>
+          <button
+            className='w-[250px] h-[50px] rounded-md bg-[#4A0083] text-white'
+            onClick={handleRestart}
+          >
+            Reiniciar escáner
+          </button>
+        </div>
       )}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <h2>Productos escaneados:</h2>
-        <ul>
-          {scannedProducts.map((product, index) => (
-            <li key={index}>{product}</li>
-          ))}
-        </ul>
-      </div>
+      {scannedData && (
+        <div className="popup absolute w-screen h-screen bg-[#000000a9] top-0 left-0 flex items-center justify-center">
+          <div className="container-data-scanned w-[270px] h-[250px] bg-white p-4 rounded-md">
+            <h2 className='flex justify-center items-center font-bold mb-4 w-full truncate'>{scannedData.name}</h2>
+            <p className='text-[#838383]'>Selecciona el precio:</p>
+            <select className='input-reset w-[98%] ml-[1%] mb-12 bg-[#e6e6e6] p-2 rounded-md' value={selectedPrice ?? scannedData.unit_price} onChange={(e) => setSelectedPrice(Number(e.target.value))}>
+              <option value={scannedData.unit_price}>Unitario: {FormatCurrency(scannedData.unit_price, 'COP')}</option>
+              <option value={scannedData.combo_price}>Combo: {FormatCurrency(scannedData.combo_price, 'COP')}</option>
+              <option value={scannedData.mayor_price}>Mayor: {FormatCurrency(scannedData.mayor_price, 'COP')}</option>
+            </select>
+            <button className='w-full h-[50px] rounded-md bg-[#4A0083] text-white' onClick={handleAddItem}>Agregar Ítem</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default ScannerQr;
+
+
