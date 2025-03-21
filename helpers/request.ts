@@ -7,7 +7,15 @@ export const NewRequests = async(urls:string[],method:string,body?:string[],auth
 
         urls.forEach((url:string, index:number)=>{
             
-            promises[index] = fetch(url,{
+            promises[index] = fetch(url, method === 'GET' ? {
+                method: method,
+                cache: 'no-store',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': auth || `Bearer JGQPC3fuRgXCtpNjShZQGnzC`
+                }
+                
+             }:{
                 method: method,
                 cache: 'no-store',
                 headers:{

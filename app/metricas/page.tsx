@@ -1,7 +1,10 @@
+import { SectionMetrics } from "@/components/section.metrics";
 
-export default function PageMetrics() {
+export default  function PageMetrics() {
+
+  
 
     return<>
-        <h1>Metrics</h1>
+        <SectionMetrics/>
     </>
 }

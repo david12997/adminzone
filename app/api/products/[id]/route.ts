@@ -36,7 +36,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: any
         if(rows.length === 0) return NextResponse.json({status:401,message:'unauthorized'});
 
         // get product
-        const [product] = await DB.query('SELECT * FROM product WHERE id = ?',[id]);
+        const [product] = await DB.query('SELECT id, name, description, stock, base, media, ml_price, unit_price, combo_price, mayor_price, comes_from, id_comes_from FROM product WHERE id = ?',[id]);
 
 
         return NextResponse.json({status:200,data:product});

@@ -77,8 +77,8 @@ const FormAppMovement = (props:formAppMovementProps): JSX.Element => {
 
             <div className="container-1 ml-[3%] mt-2 w-[94%]  h-[18%] flex justify-around">
                 
-                <div className="total w-[45%]">
-                    <p className="text-[#5a5a5a] text-[13px] font-normal">Total Movimiento</p>
+                <div className="total w-[35%]">
+                    <p className="text-[#5a5a5a] text-[13px] font-normal truncate">Total Movimiento</p>
                     <p className="price font-bold">{FormatCurrency(props.handleTotalAmount(props.movementProducts),'COP')}</p>
                 </div>
                 
@@ -100,7 +100,7 @@ const FormAppMovement = (props:formAppMovementProps): JSX.Element => {
             
             <div className="container-1 ml-[3%] mt-2 w-[94%]  h-[18%] flex justify-betweenp pl-3">
                 <div className="cuentas w-[45%]">
-                    <p className=" text-[#5a5a5a] text-[13px] font-normal">Cuenta Bancaria</p>
+                    <p className=" text-[#5a5a5a] text-[13px] font-normal truncate">Cuenta Bancaria</p>
                     <select name="account" className="input-reset select-owner font-bold">
                         {
                             props.ownersAccounts.length > 0 && props.ownersAccounts.map((account:any) => {

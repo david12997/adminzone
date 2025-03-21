@@ -36,7 +36,7 @@ const SectionItems = (props:{itemsDisplay:string,items:any[]}): JSX.Element => {
                 
                 itemsStore.map((product:any) => {
                    
-                   if(product.status === 'deleted') return null;
+                   if(product.status === 'deleted' || product.name.toLowerCase().includes('legacy') ) return null;
 
                     return <CardItem 
                         key={product.id} 
