@@ -26,7 +26,7 @@ const SectionAppMovement = (props:{appDisplay:string}):JSX.Element => {
                 <div className="containerItems w-[95%] ml-[2%] h-[40%] bg-[#f3f3f3] overflow-y-scroll">
 
                     {
-                        movementProducts.length > 0 &&  movementProducts.map((product, index) => {
+                        movementProducts.length > 0 &&  movementProducts.map((product:any, index:number) => {
 
                             const total = parseInt(product.quantity_selected) * parseInt(product.price_selected)
                             const media= JSON.parse(product.media)

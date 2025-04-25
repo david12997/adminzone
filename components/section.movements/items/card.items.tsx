@@ -1,13 +1,13 @@
 import { FormatCurrency } from "@/helpers/format.currency";
-
 type CardItemProps = {
     product: any;
     media: any;
     handleAddProduct: any;
     handlePriceChange: any;
+ 
 }
 
-const CardItem: React.FC<CardItemProps> = ({ product,media,handleAddProduct, handlePriceChange  }) => {
+const CardItem: React.FC<CardItemProps> = ({ product,media,handleAddProduct, handlePriceChange,  }) => {
 
 
     return<>
@@ -20,6 +20,11 @@ const CardItem: React.FC<CardItemProps> = ({ product,media,handleAddProduct, han
                 <p className="text-[13px] text-[#868686] w-[99%] truncate mb-4">{product.name}</p>
                 <hr className="mt-1 mb-2" />
                 <p className="text-[13px] text-[#868686] w-[99%] truncate">Elegir Precio:</p>
+                
+                {
+                    
+
+                }
                 <select
                     defaultValue={product.unit_price}
                     className="text-[13px] font-bold text-[#000] w-[99%] truncate input-reset"
@@ -29,6 +34,7 @@ const CardItem: React.FC<CardItemProps> = ({ product,media,handleAddProduct, han
                     <option value={product.combo_price}>Combo: {FormatCurrency(product.combo_price, 'COP')}</option>
                     <option value={product.mayor_price}>Al Mayor: {FormatCurrency(product.mayor_price, 'COP')}</option>
                 </select>
+                
                 <button onClick={() => handleAddProduct(product)} className="bg-[#4A0083] text-[#fff] font-bold text-[13px] w-[99%] h-[30px] rounded-md mt-2">Agregar</button>
             </div>
         </div>

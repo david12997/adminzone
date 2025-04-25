@@ -2,7 +2,8 @@
 
 import { FormatCurrency } from "@/helpers/format.currency";
 import { transactionTypes } from "@/store/transaction";
-import { JSX } from "react";
+import { JSX, useState } from "react";
+import InputMovement from "../input.movement";
 
 type formAppMovementProps = {
     owners: any[];
@@ -15,7 +16,11 @@ type formAppMovementProps = {
 
 const FormAppMovement = (props:formAppMovementProps): JSX.Element => {
 
+    const [amountSalida, setAmountSalida] = useState<number>(0);
+    const [amountEntrada, setAmountEntrada] = useState<number>(0);
     const CreateMovement = async(event: React.FormEvent<HTMLFormElement>) => {
+
+        
 
         event.preventDefault(); // Prevent the form from reloading
 
@@ -58,8 +63,8 @@ const FormAppMovement = (props:formAppMovementProps): JSX.Element => {
         }));
     
         const transaction = {
-            type_movement: "entrada",
-            amount: props.handleTotalAmount(props.movementProducts),
+            type_movement: props.transaction.type_movement === 'entrada' ? "entrada" :'salida',
+            amount: props.transaction.type_movement === 'entrada' ? amountEntrada : amountSalida,
             concept: description,
             account_id: accountId,
             user_id: ownerId,
@@ -79,7 +84,13 @@ const FormAppMovement = (props:formAppMovementProps): JSX.Element => {
                 
                 <div className="total w-[35%]">
                     <p className="text-[#5a5a5a] text-[13px] font-normal truncate">Total Movimiento</p>
-                    <p className="price font-bold">{FormatCurrency(props.handleTotalAmount(props.movementProducts),'COP')}</p>
+                    {
+                        props.transaction.type_movement === 'entrada'
+                        ?  <InputMovement updateAmount={setAmountEntrada} value={0} /> //<p className="price font-bold">{FormatCurrency(props.handleTotalAmount(props.movementProducts),'COP')}</p>
+                        : <InputMovement updateAmount={setAmountSalida} value={0} />
+                    }
+                    
+                    
                 </div>
                 
                 <div className="total w-[45%]">

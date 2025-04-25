@@ -14,7 +14,12 @@ export class MetricsService {
                 console.log(response);
                 
                 dispatch(setData(response[0].data));
+                this.totalBaseRevocered(response[0].data);
+                this.totalGrossProfitPerTransaction(response[0].data[56]);
+                this.totalBaseRecoveredPerTransaction(response[0].data[56]);
                 dispatch(setTotalAmountEntered(this.totalAMountEntered(response[0].data)));
+
+                this.profitPerInversor(2218895,1520307,200000)
                 
                
             })
@@ -36,6 +41,130 @@ export class MetricsService {
         return FormatCurrency(total,'COP');
     }
 
+    private totalAMountExit(metricStore:any) {
+
+        let total = 0;
+        metricStore.forEach((metric:any) => {
+           if(metric.type === 'salida') total += parseInt(metric.amount)
+        });
+
+        return FormatCurrency(total,'COP');
+    }
+
+    totalBaseRevocered(metricStore:any) {      
+        let totalBase = 0;
+        let totalSalidaBase = 0;
+        const allProducts = metricStore
+        .filter((metric: any) => metric.type === 'entrada')  // filtra solo las entradas
+        .flatMap((metric: any) => metric.transaction_products); // aplana todos los productos en un solo array
+
+        allProducts.forEach((product: any) => { 
+            totalBase+= parseInt(product.product_id.base) 
+        
+        });
+
+
+
+        metricStore.forEach((metric:any) => {
+            if(metric.type === 'salida' && metric.description.toLowerCase().includes('base')) totalSalidaBase += parseInt(metric.amount)
+         });
+
+        console.log(totalBase - totalSalidaBase);
+        console.log(totalBase);
+        console.log(totalSalidaBase);
+    }
+
+    totalBaseRecoveredPerTransaction(transaction:any) {
+        
+        let totalBase = 0;
+
+        if(transaction.type === 'entrada'){
+
+            transaction.transaction_products.forEach((product: any) => { 
+
+                totalBase+= parseInt(product.product_id.base) 
+
+                console.log(totalBase);
+                return totalBase;
+            });
+
+
+          
+
+        }
+
+        return totalBase;
+
+    }
+
+
+
+
+
+    totalGrossProfitPerTransaction(transaction:any) {
+        let total = 0;
+        if(transaction.type=== 'entrada'){
+            total = parseInt(transaction.amount) - this.getAmountDelivery(transaction.description);
+        }
+
+        for(let i = 0; i < transaction.transaction_products.length; i++){
+            const product = transaction.transaction_products[i].product_id;
+
+            total -= parseInt(product.base)
+           
+        }
+
+       console.log(total);
+
+    }
+
+    totalProfitPerUser(user:string,amountProfit:number):number{
+
+        if( user === 'admin'){
+            return amountProfit * 0.3 // 30% for admin;
+        }
+
+        if( user === 'investor'){
+            return amountProfit * 0.7 // 70% for user;
+        }
+
+        return 0;
+    }
+
+    operatingExpenses(amountProfit:number):number{
+
+        if (amountProfit > 0 && amountProfit !== null) {
+
+            return amountProfit * 0.4; // 10% for operating expenses;
+        }
+
+        return 0;
+    }
+
+    profitPerInversor(
+        totalInvestment: number,
+        inversorAmount: number,
+        totalProfit: number
+    ): number {
+        const percentageInversor = inversorAmount / totalInvestment;
+        const profitForInversor = totalProfit * percentageInversor;
+        console.log(`El inversor ${inversorAmount} tiene un porcentaje de ${percentageInversor} y su ganancia es de ${profitForInversor}`);
+        return profitForInversor;
+    }
+
+
+
+    private getAmountDelivery(data:string) {
+
+        const match = data.match(/\$(.*?)\$/);
+
+        if (match) {
+            const valor = match[1]; // match[1] contiene lo que está entre los $ $
+            return parseInt(valor);
+        } else {
+            return 0;
+        }
+    }
 
 
 }

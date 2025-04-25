@@ -35,7 +35,7 @@ export default async function Transacciones() {
   
   return (
     <> 
-      <section className="border border-red-700 w-[80%] md:w-[85%] h-[86vh] ml-[64px] md:ml-[150px] mt-[80px] md:mt-[60px] flex justify-around flex-wrap overflow-y-scroll m-2 p-2 items-center">
+      <section className=" w-[80%] md:w-[85%] h-[86vh] ml-[64px] md:ml-[150px] mt-[80px] md:mt-[60px] flex justify-around flex-wrap overflow-y-scroll m-2 p-2 items-center">
         <TransactionTable  transactionData={transactions}/>
       </section>
 
