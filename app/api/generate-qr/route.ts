@@ -34,7 +34,7 @@ export async function GET(req: Request) {
         /**
          * we obtain the products from the database using the @limit and @offset parameters
          */
-        const [products]: any[] = await DB.query('SELECT * FROM product LIMIT ? OFFSET ?', [parseInt(limit), parseInt(offset)]);
+        const [products]: any[] = await DB.query('SELECT * FROM product WHERE name NOT LIKE ? LIMIT ? OFFSET ?', ["%LEGACY%",parseInt(limit), parseInt(offset)]);
 
         /**
          * create a PDF document and add a page to it

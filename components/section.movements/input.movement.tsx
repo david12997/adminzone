@@ -5,6 +5,7 @@ import { useState } from "react";
 
 type InputMovementProps = {
     value: number;
+    updateAmount: (e: any) => any;
 };
 
 const InputMovement = (props: InputMovementProps) => {
@@ -18,6 +19,7 @@ const InputMovement = (props: InputMovementProps) => {
         const rawNumber = parseInt(input.replace(/[^0-9]/g, ''), 10);
 
         if (!isNaN(rawNumber)) {
+            props.updateAmount(rawNumber); // Update parent component
             setRawValue(rawNumber); // Update raw value
             setDisplayValue(input); // Temporarily show user input
         } else {

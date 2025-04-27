@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         const searchPattern = `%${search}%`;
 
         // get products
-        const [products] = await DB.query('SELECT * FROM product WHERE name LIKE ?  LIMIT ? OFFSET ?',[searchPattern,parseInt(limit),parseInt(offset)]);
+        const [products] = await DB.query('SELECT id, name, description, stock, base, media, ml_price, unit_price, combo_price, mayor_price, comes_from, id_comes_from  FROM product WHERE name LIKE ?  LIMIT ? OFFSET ?',[searchPattern,parseInt(limit),parseInt(offset)]);
 
 
         return NextResponse.json({status:200,data:products});

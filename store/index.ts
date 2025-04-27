@@ -9,13 +9,15 @@ import MovementSliceReducer from "./movement";
 import ItemSliceReducer from "./item";
 import OwnersSliceReducer from "./owner";
 import TransactionSliceReducer from "./transaction";
+import MertricsSliceReducer from "./metrics";
 
 const rootReducer = combineReducers({
 
     movement:MovementSliceReducer,
     item:ItemSliceReducer,
     owners:OwnersSliceReducer,
-    transaction:TransactionSliceReducer
+    transaction:TransactionSliceReducer,
+    metrics:MertricsSliceReducer
 
 });
 

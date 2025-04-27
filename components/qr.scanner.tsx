@@ -16,8 +16,8 @@ const ScannerQr = () => {
         <div className='flex items-center justify-center'>
           <video
             ref={videoRef}
-            className='border border-[#4A0083] rounded-md'
-            style={{ width: '250px', height: '250px' }}
+            className='border border-[#4A0083] rounded-md '
+            style={{ width: 'auto', height: '400px' }}
           />
           <canvas ref={canvasRef} style={{ display: 'none' }} />
         </div>
@@ -35,7 +35,7 @@ const ScannerQr = () => {
       {scannedData && (
         <div className="popup absolute w-screen h-screen bg-[#000000a9] top-0 left-0 flex items-center justify-center">
           <div className="container-data-scanned w-[270px] h-[250px] bg-white p-4 rounded-md">
-            <h2 className='flex justify-center items-center font-bold mb-4 w-full truncate'>{scannedData.name}</h2>
+            <h2 className='flex items-center font-bold mb-4 w-full truncate'>{scannedData.name}</h2>
             <p className='text-[#838383]'>Selecciona el precio:</p>
             <select className='input-reset w-[98%] ml-[1%] mb-12 bg-[#e6e6e6] p-2 rounded-md' value={selectedPrice ?? scannedData.unit_price} onChange={(e) => setSelectedPrice(Number(e.target.value))}>
               <option value={scannedData.unit_price}>Unitario: {FormatCurrency(scannedData.unit_price, 'COP')}</option>

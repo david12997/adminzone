@@ -6,9 +6,11 @@ import useItems from "@/hooks/use.items";
 import CardItem from "@/components/section.movements/items/card.items";
 
 
+
 const SectionItems = (props:{itemsDisplay:string,items:any[]}): JSX.Element => {
 
     const {  itemsStore, typeMovement, handleChange, handleAddProduct, handlePriceChange } = useItems({items:props.items});
+    
 
 
     return (
@@ -34,19 +36,37 @@ const SectionItems = (props:{itemsDisplay:string,items:any[]}): JSX.Element => {
             <div className="container-products flex flex-wrap justify-between w-[95%] ml-[2%] h-[69%] overflow-y-scroll">
                 {
                 
+                
                 itemsStore.map((product:any) => {
                    
-                   if(product.status === 'deleted') return null;
+                   if(product.status === 'deleted' || product.name.toLowerCase().includes('legacy') ) return null;
 
+                   if(typeMovement === 'entrada' && product.id !== 83) 
                     return <CardItem 
                         key={product.id} 
                         product={product} 
                         media={JSON.parse(product.media)} 
                         handleAddProduct={handleAddProduct} 
                         handlePriceChange={handlePriceChange} 
+                        
 
                     />;
+
+                    if(typeMovement === 'salida' && product.id === 83)
+                    return <CardItem 
+                        key={product.id} 
+                        product={product} 
+                        media={JSON.parse(product.media)} 
+                        handleAddProduct={handleAddProduct} 
+                        handlePriceChange={handlePriceChange} 
+                        
+
+                    />
+                        
+
                 })
+                
+
                 
                 }
             </div>
