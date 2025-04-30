@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import ReportForm from "./amount.reported";
+import { useAppSelector } from "@/store";
+import { FormatCurrency } from "@/helpers/format.currency";
+
 
 type PropsCardBalance = {
     transactions:Array<any>;
@@ -11,8 +14,11 @@ const CardBalance = (props:PropsCardBalance): React.JSX.Element => {
   const [showReportForm, setShowReportForm] = useState<boolean>(false);
   const reportFormRef = useRef<HTMLDivElement | null>(null);
 
+  const amountReported = useAppSelector((state) => state.metrics.amountReported);
+
   // Close ReportForm when clicking outside
   useEffect(() => {
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         reportFormRef.current &&
@@ -53,7 +59,7 @@ const CardBalance = (props:PropsCardBalance): React.JSX.Element => {
     return<>
     
 
-        <section className="bg-white w-[290px] md:w-[390px] h-[500px] rounded-md shadow-md p-4 m-4 " >
+        <section className="bg-white w-[290px] md:w-[430px] h-[500px] rounded-md shadow-md p-4 m-4 " >
             <div className="title">Balance General</div>
             <hr className=" mt-2" />
 
@@ -85,23 +91,41 @@ const CardBalance = (props:PropsCardBalance): React.JSX.Element => {
             <div className="container-entrada-salida w-[100%] flex justify-around mt-4">
                 <div className="entrada">
                     <div className="entrada-title text-[13px] text-[#858585]">Entradas Totales</div>
-                    <div className="entrada-amount font-bold text-[#137c1c] text-[22px]"> ${totalEntrada.toLocaleString()}</div>
+                    <div className="entrada-amount font-bold text-[#137c1c] text-[22px]"> {FormatCurrency(totalEntrada,'COP')}</div>
                 </div>
                 <div className="salida">
                     <div className="entrada-title text-[13px] text-[#858585]">Salidas Totales</div>
-                    <div className="salida-amount  font-bold text-[#da2a2a] text-[22px]"> ${totalSalida.toLocaleString()}</div>
+                    <div className="salida-amount  font-bold text-[#da2a2a] text-[22px]"> {FormatCurrency(totalSalida,'COP')}</div>
                 </div>
             </div>
              <div className="container-entrada-salida w-[100%] flex justify-around mt-4 border-t border-[#e2e2e2] pt-2">
                 <div className="entrada">
                     <div className="entrada-title text-[13px] text-[#858585]">Cantidad Calculada</div>
-                    <div className="entrada-amount font-bold text-[#858585] text-[22px]"> ${(totalEntrada-totalSalida).toLocaleString()}</div>
+                    <div className="entrada-amount font-bold text-[#858585] text-[22px]"> {FormatCurrency((totalEntrada-totalSalida),'COP')}</div>
                 </div>
                 <div className="salida cursor-pointer" onClick={() => setShowReportForm(true)}>
                     <div className="entrada-title text-[13px] text-[#858585]">Cantidad Reportada</div>
-                    <div className="salida-amount  font-bold text-[#da2a2a] text-[22px]"> ${totalSalida.toLocaleString()}</div>
+                    <div className="salida-amount  font-bold text-[#858585] text-[22px]">{FormatCurrency(amountReported,'COP')}</div>
                 </div>
             </div>
+            <div className="container-entrada-salida w-[100%] flex justify-around mt-4 border-t border-[#e2e2e2] pt-2">
+                <div className="entrada">
+                    <div className="entrada-title text-[13px] text-[#858585]">Balance</div>
+                    {
+                        (totalEntrada - totalSalida) - amountReported > 0 ? (
+                            <div className="entrada-amount font-bold text-[#137c1c] text-[26px]"> {FormatCurrency(((totalEntrada - totalSalida) - amountReported),'COP')}</div>
+                        ) :
+                        (totalEntrada - totalSalida) - amountReported < 0 ? (
+                            <div className="entrada-amount font-bold text-[#da2a2a] text-[26px]"> {FormatCurrency(((totalEntrada - totalSalida) - amountReported),'COP')}</div>
+                        ):
+                        <div className="entrada-amount font-bold text-[#a3831a] text-[26px]"> {FormatCurrency(((totalEntrada - totalSalida) - amountReported),'COP')}</div>
+                        
+                    }
+                   
+                </div>
+            </div>
+
+            <hr className="mb-2 mt-4" />
 
             {/* ReportForm */}
             {showReportForm && (

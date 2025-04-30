@@ -1,6 +1,7 @@
 import { FormatCurrency } from "@/helpers/format.currency";
 import { NewRequests } from "@/helpers/request";
-import { setData, setTotalAmountEntered } from "@/store/metrics";
+import { setData, setTotalAmountEntered, setAmountReported } from "@/store/metrics";
+import { DirectusAPI } from "./directus.api.service";
 
 export class MetricsService {
 
@@ -25,10 +26,25 @@ export class MetricsService {
             })
             .catch((error) => {console.log(error)})
 
+            const directusAPI = new DirectusAPI();
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`,
+            };
+            const data = await directusAPI.getItemById(1, '*', headers, 'cash_report');
+            
+            if(data !== null && data !== undefined){
+
+                let amount = data.bancolombia+data.cash+data.mercaodpago+data.nequi;
+                dispatch(setAmountReported(amount));
+            }
+
         } catch (error) {
 
             console.error("Error setting metrics:", error);
         }
+
+
     }
 
     private totalAMountEntered(metricStore:any) {
@@ -38,7 +54,7 @@ export class MetricsService {
            if(metric.type === 'entrada') total += parseInt(metric.amount)
         });
 
-        return FormatCurrency(total,'COP');
+        return total;
     }
 
     private totalAMountExit(metricStore:any) {
@@ -48,7 +64,7 @@ export class MetricsService {
            if(metric.type === 'salida') total += parseInt(metric.amount)
         });
 
-        return FormatCurrency(total,'COP');
+        return total;
     }
 
     totalBaseRevocered(metricStore:any) {      
@@ -164,6 +180,11 @@ export class MetricsService {
         } else {
             return 0;
         }
+    }
+
+
+    updateAmountReported = (dispatch:any, amountReported:any) => {
+        dispatch(setAmountReported(amountReported));
     }
 
 

@@ -1,10 +1,15 @@
 'use client'
 
-import React, { useState } from "react";
+import { FormatCurrency } from "@/helpers/format.currency";
+import { DirectusAPI } from "@/services/directus.api.service";
+import { MetricsService } from "@/services/metrics.service";
+import { useAppDispatch } from "@/store";
+import React, { useEffect, useState } from "react";
 
 const denominations = [
   { label: "$ 50", value: 50 },
   { label: "$ 100", value: 100 },
+  { label: "$ 200", value: 200 },
   { label: "$ 500", value: 500 },
   { label: "$ 1.000", value: 1000 },
   { label: "$ 2.000", value: 2000 },
@@ -15,11 +20,47 @@ const denominations = [
   { label: "$ 100.000", value: 100000 },
 ];
 
+
+
 const ReportForm: React.FC = () => {
   const [nequi, setNequi] = useState("");
   const [bancolombia, setBancolombia] = useState("");
   const [mercadoPago, setMercadoPago] = useState("");
   const [cash, setCash] = useState(Array(denominations.length).fill(2));
+  const directus = new DirectusAPI();
+  const metricsService = new MetricsService();
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+
+    
+
+    const fetchData = async () => {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`,
+      };
+      try {
+        const data = await directus.getItems({}, headers, "cash_report");
+       console.log(data);
+       if (data.length > 0) {
+        setNequi(data[0].nequi.toString());
+        setBancolombia(data[0].bancolombia.toString());
+        setMercadoPago(data[0].mercaodpago.toString());
+        
+        setCash(Object.values(data[0].cash_counter))
+        
+
+      }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
 
   const handleCashChange = (idx: number, value: string) => {
     const newCash = [...cash];
@@ -35,7 +76,32 @@ const ReportForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
-    alert("Reporte guardado!");
+    const reportData = {
+      nequi: parseInt(nequi),
+      bancolombia: parseInt(bancolombia),
+      mercaodpago: parseInt(mercadoPago),
+      cash: totalCash,
+      cash_counter: cash,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`,
+    };
+
+    let amount = parseInt(nequi) + parseInt(bancolombia) + parseInt(mercadoPago) + totalCash;
+    metricsService.updateAmountReported(dispatch,amount);
+
+    directus.updateItem(1,reportData,headers,'cash_report').then((res) => {
+      console.log(res);
+      alert("Reporte guardado!");
+    }
+    ).catch((err) => {
+      console.log(err);
+      alert("Error al guardar el reporte!");
+    });
+    
+    
+
   };
 
   return (

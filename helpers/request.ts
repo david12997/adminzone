@@ -12,7 +12,7 @@ export const NewRequests = async(urls:string[],method:string,body?:string[],auth
                 cache: 'no-store',
                 headers:{
                     'Content-Type': 'application/json',
-                    'Authorization': auth || `Bearer JGQPC3fuRgXCtpNjShZQGnzC`
+                    'Authorization': auth || `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`
                 }
                 
              }:{
@@ -20,7 +20,7 @@ export const NewRequests = async(urls:string[],method:string,body?:string[],auth
                 cache: 'no-store',
                 headers:{
                     'Content-Type': 'application/json',
-                    'Authorization': auth || `Bearer JGQPC3fuRgXCtpNjShZQGnzC`
+                    'Authorization': auth || `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN}`
                 },
                 body: body ? body[index] || JSON.stringify({limit:10,offset:0}) : JSON.stringify({limit:10,offset:0})
              })           
